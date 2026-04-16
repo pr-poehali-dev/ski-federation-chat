@@ -231,7 +231,7 @@ export default function Index() {
               </div>
               <div className="hidden sm:block">
                 <div className="font-display font-semibold text-sm text-snow-white leading-tight">Федерация лыжных гонок</div>
-                <div className="text-muted-foreground text-xs">Российская Федерация</div>
+                <div className="text-muted-foreground text-xs">г. Лихославль и Лихославльский МО</div>
               </div>
             </div>
 
@@ -313,8 +313,11 @@ export default function Index() {
               <span className="block text-5xl sm:text-7xl xl:text-8xl text-gradient-ice">ГОНОК</span>
             </h1>
 
-            <p className="text-muted-foreground text-lg mb-8 max-w-xl animate-fade-up stagger-2 font-body font-light">
-              Объединяем лучших спортсменов страны. Организуем соревнования мирового уровня. Развиваем лыжный спорт от массового до олимпийского.
+            <p className="text-muted-foreground text-xl mb-2 max-w-xl animate-fade-up stagger-2 font-display font-medium uppercase tracking-wide text-snow-white/80">
+              города Лихославля и Лихославльского муниципального округа
+            </p>
+            <p className="text-muted-foreground text-base mb-8 max-w-xl animate-fade-up stagger-2 font-body font-light">
+              Объединяем спортсменов района. Организуем соревнования и развиваем лыжный спорт от детского до профессионального уровня.
             </p>
 
             <div className="flex flex-wrap gap-4 animate-fade-up stagger-3">
@@ -337,9 +340,9 @@ export default function Index() {
 
             <div className="mt-16 grid grid-cols-3 gap-6 max-w-lg animate-fade-up stagger-4">
               {[
-                { val: "200+", label: "Спортсменов" },
-                { val: "45", label: "Соревнований" },
-                { val: "18", label: "Регионов" },
+                { val: "80+", label: "Спортсменов" },
+                { val: "12", label: "Соревнований" },
+                { val: "1987", label: "Год основания" },
               ].map((s) => (
                 <div key={s.label} className="border-l-2 border-fire-orange pl-4">
                   <div className="font-display font-bold text-3xl text-snow-white">{s.val}</div>
@@ -369,17 +372,17 @@ export default function Index() {
                 ИСТОРИЯ И<br /><span className="text-gradient-fire">ТРАДИЦИИ</span>
               </h2>
               <p className="text-muted-foreground mb-4 leading-relaxed">
-                Федерация лыжных гонок основана в 1948 году и является старейшей спортивной организацией страны в области зимних видов спорта. За 75 лет мы воспитали сотни чемпионов мирового уровня.
+                Федерация лыжных гонок города Лихославля и Лихославльского муниципального округа объединяет спортсменов Тверской области, развивает лыжный спорт на районном уровне и представляет интересы атлетов на региональных соревнованиях.
               </p>
               <p className="text-muted-foreground mb-8 leading-relaxed">
-                Наша миссия — развитие лыжных гонок от детского до олимпийского уровня, обеспечение честных и прозрачных соревнований, поддержка спортсменов на всех этапах карьеры.
+                Наша миссия — развитие лыжных гонок от детских секций до профессионального спорта, организация честных и прозрачных соревнований, поддержка спортсменов Лихославльского района на всех этапах карьеры.
               </p>
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { icon: "Trophy", label: "Чемпионы мира", val: "32" },
-                  { icon: "Medal", label: "Олимпийские медали", val: "47" },
-                  { icon: "MapPin", label: "Регионов в составе", val: "18" },
-                  { icon: "Calendar", label: "Год основания", val: "1948" },
+                  { icon: "Trophy", label: "Призёры регионального ЧР", val: "14" },
+                  { icon: "Medal", label: "Медалей сезона", val: "31" },
+                  { icon: "MapPin", label: "Район", val: "Тверская обл." },
+                  { icon: "Calendar", label: "Год основания", val: "1987" },
                 ].map((item) => (
                   <div key={item.label} className="bg-dark-surface rounded-lg p-4 border border-border card-glow-orange transition-all duration-300">
                     <Icon name={item.icon} size={20} className="text-fire-orange mb-2" />
@@ -742,9 +745,9 @@ export default function Index() {
           <div className="grid lg:grid-cols-2 gap-12">
             <div className="space-y-6">
               {[
-                { icon: "MapPin", label: "Адрес", val: "г. Москва, Лужнецкая набережная, д. 8, оф. 214" },
-                { icon: "Phone", label: "Телефон", val: "+7 (495) 123-45-67" },
-                { icon: "Mail", label: "Электронная почта", val: "info@skirace-federation.ru" },
+                { icon: "MapPin", label: "Адрес", val: "г. Лихославль, Тверская область" },
+                { icon: "Phone", label: "Телефон", val: "+7 (48261) _ _-_ _-_ _" },
+                { icon: "Mail", label: "Электронная почта", val: "info@ski-likhoslavl.ru" },
                 { icon: "Clock", label: "Режим работы", val: "Пн–Пт: 9:00 – 18:00" },
               ].map((c) => (
                 <div key={c.label} className="flex items-start gap-4 group">
@@ -803,7 +806,7 @@ export default function Index() {
               <div className="w-8 h-8 bg-fire-orange rounded flex items-center justify-center">
                 <span className="text-white font-display font-bold text-xs">ФЛГ</span>
               </div>
-              <span className="font-display text-muted-foreground text-sm">Федерация лыжных гонок России © 2024</span>
+              <span className="font-display text-muted-foreground text-sm">ФЛГ г. Лихославля и Лихославльского МО © 2024</span>
             </div>
             <div className="flex flex-wrap gap-4 justify-center">
               {NAV_LINKS.slice(0, 4).map((l) => (
