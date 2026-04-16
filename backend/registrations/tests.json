@@ -1,0 +1,29 @@
+{
+  "tests": [
+    {
+      "name": "POST — создать заявку",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "full_name": "Тестов Тест Тестович",
+        "birth_date": "2005-03-15",
+        "region": "Тверская область",
+        "team": "СШОР Лихославль",
+        "rank": "1 разряд",
+        "competition_name": "Лыжня России",
+        "distance": "5 км"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {"success": true},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "GET — список заявок",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {"registrations": []},
+      "bodyMatcher": "partial"
+    }
+  ]
+}

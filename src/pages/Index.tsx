@@ -8,12 +8,15 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
+const API_URL = "https://functions.poehali.dev/517afb1a-73b0-4b78-98ff-5bc2d4ab97a0";
+
 const NAV_LINKS = [
   { id: "home", label: "Главная" },
   { id: "about", label: "О федерации" },
   { id: "athletes", label: "Спортсмены" },
   { id: "competitions", label: "Соревнования" },
   { id: "results", label: "Результаты" },
+  { id: "signup", label: "Регистрация" },
   { id: "news", label: "Новости" },
   { id: "gallery", label: "Галерея" },
   { id: "contacts", label: "Контакты" },
@@ -145,6 +148,40 @@ export default function Index() {
   const [registerForm, setRegisterForm] = useState({
     name: "", age: "", region: "", category: "", specialty: "", bio: ""
   });
+
+  const [signupForm, setSignupForm] = useState({
+    full_name: "", birth_date: "", region: "", team: "", rank: "", competition_name: "", distance: "",
+  });
+  const [signupStatus, setSignupStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [signupError, setSignupError] = useState("");
+
+  const submitSignup = async () => {
+    const { full_name, birth_date, region, competition_name, distance } = signupForm;
+    if (!full_name || !birth_date || !region || !competition_name || !distance) {
+      setSignupError("Заполните все обязательные поля (*)");
+      return;
+    }
+    setSignupStatus("loading");
+    setSignupError("");
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(signupForm),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSignupStatus("success");
+        setSignupForm({ full_name: "", birth_date: "", region: "", team: "", rank: "", competition_name: "", distance: "" });
+      } else {
+        setSignupStatus("error");
+        setSignupError(data.error || "Ошибка при отправке заявки");
+      }
+    } catch {
+      setSignupStatus("error");
+      setSignupError("Ошибка соединения. Попробуйте ещё раз.");
+    }
+  };
 
   const scrollTo = (id: string) => {
     setActiveSection(id);
@@ -576,6 +613,190 @@ export default function Index() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SIGNUP */}
+      <section id="signup" className="py-24 bg-dark-card relative">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-fire-orange/40 to-transparent" />
+        <div className="container mx-auto px-4">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-px w-8 bg-fire-orange" />
+            <span className="font-display text-fire-orange uppercase tracking-widest text-xs">Участие в соревнованиях</span>
+          </div>
+          <h2 className="font-display font-bold text-4xl sm:text-5xl text-snow-white mb-3 leading-tight">
+            РЕГИСТРАЦИЯ<br /><span className="text-gradient-fire">НА СОРЕВНОВАНИЯ</span>
+          </h2>
+          <p className="text-muted-foreground mb-10 font-body">Заявки принимаются от всех желающих. Поля, отмеченные *, обязательны.</p>
+
+          <div className="grid lg:grid-cols-2 gap-10 items-start">
+            {/* ФОРМА */}
+            <div className="bg-dark-surface rounded-xl border border-border p-6">
+              {signupStatus === "success" ? (
+                <div className="flex flex-col items-center justify-center py-12 gap-4">
+                  <div className="w-16 h-16 rounded-full bg-green-500/20 border border-green-500/30 flex items-center justify-center">
+                    <Icon name="CheckCircle" size={32} className="text-green-400" />
+                  </div>
+                  <div className="font-display font-bold text-2xl text-snow-white text-center">Заявка принята!</div>
+                  <p className="text-muted-foreground text-center text-sm">Мы свяжемся с вами для подтверждения участия.</p>
+                  <Button
+                    onClick={() => setSignupStatus("idle")}
+                    className="mt-2 bg-fire-orange hover:bg-orange-600 text-white font-display uppercase tracking-wider"
+                  >
+                    Подать ещё одну заявку
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-muted-foreground text-xs font-display uppercase tracking-wider mb-2 block">ФИО *</Label>
+                    <Input
+                      className="bg-dark-base border-border text-snow-white placeholder:text-muted-foreground focus:border-fire-orange"
+                      placeholder="Фамилия Имя Отчество"
+                      value={signupForm.full_name}
+                      onChange={(e) => setSignupForm(f => ({ ...f, full_name: e.target.value }))}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-muted-foreground text-xs font-display uppercase tracking-wider mb-2 block">Дата рождения *</Label>
+                      <Input
+                        className="bg-dark-base border-border text-snow-white placeholder:text-muted-foreground focus:border-fire-orange"
+                        type="date"
+                        value={signupForm.birth_date}
+                        onChange={(e) => setSignupForm(f => ({ ...f, birth_date: e.target.value }))}
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground text-xs font-display uppercase tracking-wider mb-2 block">Регион *</Label>
+                      <Input
+                        className="bg-dark-base border-border text-snow-white placeholder:text-muted-foreground focus:border-fire-orange"
+                        placeholder="Тверская область"
+                        value={signupForm.region}
+                        onChange={(e) => setSignupForm(f => ({ ...f, region: e.target.value }))}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label className="text-muted-foreground text-xs font-display uppercase tracking-wider mb-2 block">Команда / Клуб</Label>
+                      <Input
+                        className="bg-dark-base border-border text-snow-white placeholder:text-muted-foreground focus:border-fire-orange"
+                        placeholder="СШОР Лихославль"
+                        value={signupForm.team}
+                        onChange={(e) => setSignupForm(f => ({ ...f, team: e.target.value }))}
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-muted-foreground text-xs font-display uppercase tracking-wider mb-2 block">Разряд / Звание</Label>
+                      <Select value={signupForm.rank} onValueChange={(v) => setSignupForm(f => ({ ...f, rank: v }))}>
+                        <SelectTrigger className="bg-dark-base border-border text-snow-white">
+                          <SelectValue placeholder="Выберите..." />
+                        </SelectTrigger>
+                        <SelectContent className="bg-dark-card border-border text-snow-white">
+                          <SelectItem value="б/р">Без разряда</SelectItem>
+                          <SelectItem value="3 разряд">3 спортивный разряд</SelectItem>
+                          <SelectItem value="2 разряд">2 спортивный разряд</SelectItem>
+                          <SelectItem value="1 разряд">1 спортивный разряд</SelectItem>
+                          <SelectItem value="КМС">Кандидат в МС</SelectItem>
+                          <SelectItem value="МС">Мастер спорта</SelectItem>
+                          <SelectItem value="МСМК">МС международного класса</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label className="text-muted-foreground text-xs font-display uppercase tracking-wider mb-2 block">Соревнование *</Label>
+                    <Select value={signupForm.competition_name} onValueChange={(v) => setSignupForm(f => ({ ...f, competition_name: v }))}>
+                      <SelectTrigger className="bg-dark-base border-border text-snow-white">
+                        <SelectValue placeholder="Выберите соревнование" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-dark-card border-border text-snow-white">
+                        {COMPETITIONS.filter(c => c.status === "upcoming").map(c => (
+                          <SelectItem key={c.id} value={c.name}>{c.name} — {c.date}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label className="text-muted-foreground text-xs font-display uppercase tracking-wider mb-2 block">Дистанция *</Label>
+                    <Select value={signupForm.distance} onValueChange={(v) => setSignupForm(f => ({ ...f, distance: v }))}>
+                      <SelectTrigger className="bg-dark-base border-border text-snow-white">
+                        <SelectValue placeholder="Выберите дистанцию" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-dark-card border-border text-snow-white">
+                        <SelectItem value="1 км">1 км</SelectItem>
+                        <SelectItem value="3 км">3 км</SelectItem>
+                        <SelectItem value="5 км">5 км</SelectItem>
+                        <SelectItem value="7.5 км">7.5 км</SelectItem>
+                        <SelectItem value="10 км">10 км</SelectItem>
+                        <SelectItem value="15 км">15 км</SelectItem>
+                        <SelectItem value="30 км">30 км</SelectItem>
+                        <SelectItem value="50 км">50 км</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {signupError && (
+                    <div className="bg-destructive/10 border border-destructive/30 rounded-lg px-4 py-3 text-sm text-red-400 flex items-center gap-2">
+                      <Icon name="AlertCircle" size={14} />
+                      {signupError}
+                    </div>
+                  )}
+
+                  <Button
+                    className="w-full bg-fire-orange hover:bg-orange-600 text-white font-display uppercase tracking-wider h-11"
+                    onClick={submitSignup}
+                    disabled={signupStatus === "loading"}
+                  >
+                    {signupStatus === "loading" ? (
+                      <><Icon name="Loader" size={14} className="mr-2 animate-spin" />Отправляем...</>
+                    ) : (
+                      <><Icon name="Send" size={14} className="mr-2" />Подать заявку</>
+                    )}
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            {/* ИНФО */}
+            <div className="space-y-5">
+              {[
+                { icon: "ClipboardList", title: "Кто может участвовать", text: "Регистрация открыта для всех желающих — без ограничений по возрасту и уровню подготовки." },
+                { icon: "Clock", title: "Сроки подачи", text: "Заявки принимаются не позднее чем за 3 дня до начала соревнований." },
+                { icon: "Phone", title: "Вопросы", text: "По любым вопросам обращайтесь в секретариат федерации по телефону или email в разделе «Контакты»." },
+              ].map((item) => (
+                <div key={item.title} className="bg-dark-surface rounded-xl border border-border p-5 flex gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-fire-orange/10 border border-fire-orange/20 flex items-center justify-center flex-shrink-0">
+                    <Icon name={item.icon} size={18} className="text-fire-orange" />
+                  </div>
+                  <div>
+                    <div className="font-display font-semibold text-snow-white mb-1">{item.title}</div>
+                    <div className="text-muted-foreground text-sm leading-relaxed">{item.text}</div>
+                  </div>
+                </div>
+              ))}
+
+              <div className="bg-ice-blue/10 border border-ice-blue/20 rounded-xl p-5">
+                <div className="font-display font-semibold text-snow-white mb-3 flex items-center gap-2">
+                  <Icon name="Calendar" size={16} className="text-ice-blue" />
+                  Ближайшие соревнования
+                </div>
+                <div className="space-y-2">
+                  {COMPETITIONS.filter(c => c.status === "upcoming").map(c => (
+                    <div key={c.id} className="flex items-center justify-between text-sm">
+                      <span className="text-snow-white font-body">{c.name}</span>
+                      <span className="text-muted-foreground text-xs">{c.date}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
